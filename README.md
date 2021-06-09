@@ -178,7 +178,7 @@ a fast c-style struct packer & unpacker for golang
 
 ## 字节序
 
-`小端`字节序。
+`大端` 字节序。
 
 ## 基本类型
 

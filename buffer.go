@@ -138,7 +138,7 @@ func (o *Buffer) dec_uint8(p *Properties, base structPointer) error {
 // uint16
 func (o *Buffer) enc_uint16(p *Properties, base structPointer) error {
 	v := (*uint16)(unsafe.Pointer(uintptr(base) + uintptr(p.field)))
-	binary.LittleEndian.PutUint16(o.buf[o.index:], *v)
+	binary.BigEndian.PutUint16(o.buf[o.index:], *v)
 	o.index += 2
 	return nil
 }
@@ -156,7 +156,7 @@ func (o *Buffer) dec_uint16(p *Properties, base structPointer) error {
 // uint32
 func (o *Buffer) enc_uint32(p *Properties, base structPointer) error {
 	v := (*uint32)(unsafe.Pointer(uintptr(base) + uintptr(p.field)))
-	binary.LittleEndian.PutUint32(o.buf[o.index:], *v)
+	binary.BigEndian.PutUint32(o.buf[o.index:], *v)
 	o.index += 4
 	return nil
 }
@@ -168,14 +168,14 @@ func (o *Buffer) dec_uint32(p *Properties, base structPointer) error {
 		return io.ErrUnexpectedEOF
 	}
 	o.index = i
-	*v = binary.LittleEndian.Uint32(o.buf[i-4:])
+	*v = binary.BigEndian.Uint32(o.buf[i-4:])
 	return nil
 }
 
 // uint64
 func (o *Buffer) enc_uint64(p *Properties, base structPointer) error {
 	v := (*uint64)(unsafe.Pointer(uintptr(base) + uintptr(p.field)))
-	binary.LittleEndian.PutUint64(o.buf[o.index:], *v)
+	binary.BigEndian.PutUint64(o.buf[o.index:], *v)
 	o.index += 8
 	return nil
 }
@@ -187,7 +187,7 @@ func (o *Buffer) dec_uint64(p *Properties, base structPointer) error {
 		return io.ErrUnexpectedEOF
 	}
 	o.index = i
-	*v = binary.LittleEndian.Uint64(o.buf[i-8:])
+	*v = binary.BigEndian.Uint64(o.buf[i-8:])
 	return nil
 }
 
@@ -195,7 +195,7 @@ func (o *Buffer) dec_uint64(p *Properties, base structPointer) error {
 func (o *Buffer) enc_string(p *Properties, base structPointer) error {
 	v := structPointer_StringVal(base, p.field)
 	ln := len(*v)
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	if ln > 0 {
 		copy(o.buf[o.index:], *v)
@@ -231,7 +231,7 @@ func (o *Buffer) size_string(p *Properties, base structPointer) int {
 func (o *Buffer) enc_slice_byte(p *Properties, base structPointer) error {
 	v := structPointer_Bytes(base, p.field)
 	ln := len(*v)
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	if ln > 0 {
 		copy(o.buf[o.index:], *v)
@@ -315,7 +315,7 @@ func (o *Buffer) size_substruct(p *Properties, base structPointer) int {
 func (o *Buffer) enc_slice_bool(p *Properties, base structPointer) error {
 	v := structPointer_BoolSlice(base, p.field)
 	ln := len(*v)
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	for i := 0; i < ln; i++ {
 		x := 0
@@ -356,10 +356,10 @@ func (o *Buffer) size_slice_bool(p *Properties, base structPointer) int {
 func (o *Buffer) enc_slice_uint16(p *Properties, base structPointer) error {
 	v := (*[]uint16)(unsafe.Pointer(uintptr(base) + uintptr(p.field)))
 	ln := len(*v)
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	for i := 0; i < ln; i++ {
-		binary.LittleEndian.PutUint16(o.buf[o.index:], (*v)[i])
+		binary.BigEndian.PutUint16(o.buf[o.index:], (*v)[i])
 		o.index += 2
 	}
 	return nil
@@ -377,7 +377,7 @@ func (o *Buffer) dec_slice_uint16(p *Properties, base structPointer) error {
 	}
 	*v = make([]uint16, int(nb))
 	for i := 0; i < int(nb); i++ {
-		(*v)[i] = binary.LittleEndian.Uint16(o.buf[o.index+i*2:])
+		(*v)[i] = binary.BigEndian.Uint16(o.buf[o.index+i*2:])
 	}
 	o.index = end
 	return nil
@@ -392,10 +392,10 @@ func (o *Buffer) size_slice_uint16(p *Properties, base structPointer) int {
 func (o *Buffer) enc_slice_uint32(p *Properties, base structPointer) error {
 	v := (*[]uint32)(unsafe.Pointer(uintptr(base) + uintptr(p.field)))
 	ln := len(*v)
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	for i := 0; i < ln; i++ {
-		binary.LittleEndian.PutUint32(o.buf[o.index:], (*v)[i])
+		binary.BigEndian.PutUint32(o.buf[o.index:], (*v)[i])
 		o.index += 4
 	}
 	return nil
@@ -413,7 +413,7 @@ func (o *Buffer) dec_slice_uint32(p *Properties, base structPointer) error {
 	}
 	*v = make([]uint32, int(nb))
 	for i := 0; i < int(nb); i++ {
-		(*v)[i] = binary.LittleEndian.Uint32(o.buf[o.index+i*4:])
+		(*v)[i] = binary.BigEndian.Uint32(o.buf[o.index+i*4:])
 	}
 	o.index = end
 	return nil
@@ -428,10 +428,10 @@ func (o *Buffer) size_slice_uint32(p *Properties, base structPointer) int {
 func (o *Buffer) enc_slice_uint64(p *Properties, base structPointer) error {
 	v := (*[]uint64)(unsafe.Pointer(uintptr(base) + uintptr(p.field)))
 	ln := len(*v)
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	for i := 0; i < ln; i++ {
-		binary.LittleEndian.PutUint64(o.buf[o.index:], (*v)[i])
+		binary.BigEndian.PutUint64(o.buf[o.index:], (*v)[i])
 		o.index += 8
 	}
 	return nil
@@ -449,7 +449,7 @@ func (o *Buffer) dec_slice_uint64(p *Properties, base structPointer) error {
 	}
 	*v = make([]uint64, int(nb))
 	for i := 0; i < int(nb); i++ {
-		(*v)[i] = binary.LittleEndian.Uint64(o.buf[o.index+i*8:])
+		(*v)[i] = binary.BigEndian.Uint64(o.buf[o.index+i*8:])
 	}
 	o.index = end
 	return nil
@@ -464,11 +464,11 @@ func (o *Buffer) size_slice_uint64(p *Properties, base structPointer) int {
 func (o *Buffer) enc_slice_string(p *Properties, base structPointer) error {
 	v := (*[]string)(unsafe.Pointer(uintptr(base) + uintptr(p.field)))
 	ln := len(*v)
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	for i := 0; i < ln; i++ {
 		ln2 := len((*v)[i])
-		binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln2))
+		binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln2))
 		o.index += 2
 		if ln2 > 0 {
 			copy(o.buf[o.index:], (*v)[i])
@@ -514,7 +514,7 @@ func (o *Buffer) size_slice_string(p *Properties, base structPointer) int {
 func (o *Buffer) enc_slice_substruct(p *Properties, base structPointer) error {
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(uintptr(base) + uintptr(p.field)))
 	var ln = sliceHeader.Len
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	itemsize := int(p.stype.Size())
 	for i := 0; i < ln; i++ {
@@ -561,7 +561,7 @@ func (o *Buffer) size_slice_substruct(p *Properties, base structPointer) int {
 func (o *Buffer) enc_slice_substruct_ptr(p *Properties, base structPointer) error {
 	v := structPointer_StructPointerSlice(base, p.field)
 	ln := v.Len()
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	for i := 0; i < ln; i++ {
 		sv := (*v)[i]
@@ -630,7 +630,7 @@ func (o *Buffer) enc_slice_substruct_ptr_ignore_nil(p *Properties, base structPo
 			o.enc_struct(p.sprop, sv)
 		}
 	}
-	binary.LittleEndian.PutUint16(o.buf[len_index:], uint16(real_ln))
+	binary.BigEndian.PutUint16(o.buf[len_index:], uint16(real_ln))
 	return nil
 }
 
@@ -665,11 +665,11 @@ func (o *Buffer) size_slice_substruct_ptr_ignore_nil(p *Properties, base structP
 func (o *Buffer) enc_slice_slice_byte(p *Properties, base structPointer) error {
 	v := structPointer_BytesSlice(base, p.field)
 	ln := len(*v)
-	binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln))
+	binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln))
 	o.index += 2
 	for i := 0; i < ln; i++ {
 		ln2 := len((*v)[i])
-		binary.LittleEndian.PutUint16(o.buf[o.index:], uint16(ln2))
+		binary.BigEndian.PutUint16(o.buf[o.index:], uint16(ln2))
 		o.index += 2
 		if ln2 > 0 {
 			copy(o.buf[o.index:], (*v)[i])
@@ -719,7 +719,7 @@ func (o *Buffer) readUInt16() (uint16, error) {
 		return 0, io.ErrUnexpectedEOF
 	}
 	o.index = i
-	return binary.LittleEndian.Uint16(o.buf[i-2:]), nil
+	return binary.BigEndian.Uint16(o.buf[i-2:]), nil
 }
 
 // [n]byte [n]uint8 [n]int8 [n]bool
@@ -769,7 +769,7 @@ func (o *Buffer) enc_array_uint16(p *Properties, base structPointer) error {
 		sliceHeader.Len = ln
 		sliceHeader.Data = uintptr(base) + uintptr(p.field)
 		for i := 0; i < ln; i++ {
-			binary.LittleEndian.PutUint16(o.buf[o.index:], data[i])
+			binary.BigEndian.PutUint16(o.buf[o.index:], data[i])
 			o.index += 2
 		}
 	}
@@ -789,7 +789,7 @@ func (o *Buffer) dec_array_uint16(p *Properties, base structPointer) error {
 		sliceHeader.Len = ln
 		sliceHeader.Data = uintptr(base) + uintptr(p.field)
 		for i := 0; i < ln; i++ {
-			data[i] = binary.LittleEndian.Uint16(o.buf[o.index+i*2:])
+			data[i] = binary.BigEndian.Uint16(o.buf[o.index+i*2:])
 		}
 		o.index = end
 	}
@@ -810,7 +810,7 @@ func (o *Buffer) enc_array_uint32(p *Properties, base structPointer) error {
 		sliceHeader.Len = ln
 		sliceHeader.Data = uintptr(base) + uintptr(p.field)
 		for i := 0; i < ln; i++ {
-			binary.LittleEndian.PutUint32(o.buf[o.index:], data[i])
+			binary.BigEndian.PutUint32(o.buf[o.index:], data[i])
 			o.index += 4
 		}
 	}
@@ -830,7 +830,7 @@ func (o *Buffer) dec_array_uint32(p *Properties, base structPointer) error {
 		sliceHeader.Len = ln
 		sliceHeader.Data = uintptr(base) + uintptr(p.field)
 		for i := 0; i < ln; i++ {
-			data[i] = binary.LittleEndian.Uint32(o.buf[o.index+i*4:])
+			data[i] = binary.BigEndian.Uint32(o.buf[o.index+i*4:])
 		}
 		o.index = end
 	}
@@ -851,7 +851,7 @@ func (o *Buffer) enc_array_uint64(p *Properties, base structPointer) error {
 		sliceHeader.Len = ln
 		sliceHeader.Data = uintptr(base) + uintptr(p.field)
 		for i := 0; i < ln; i++ {
-			binary.LittleEndian.PutUint64(o.buf[o.index:], data[i])
+			binary.BigEndian.PutUint64(o.buf[o.index:], data[i])
 			o.index += 8
 		}
 	}
@@ -871,7 +871,7 @@ func (o *Buffer) dec_array_uint64(p *Properties, base structPointer) error {
 		sliceHeader.Len = ln
 		sliceHeader.Data = uintptr(base) + uintptr(p.field)
 		for i := 0; i < ln; i++ {
-			data[i] = binary.LittleEndian.Uint64(o.buf[o.index+i*8:])
+			data[i] = binary.BigEndian.Uint64(o.buf[o.index+i*8:])
 		}
 		o.index = end
 	}
