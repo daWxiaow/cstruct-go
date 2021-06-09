@@ -3,7 +3,7 @@ package benchmarks
 import (
 	"testing"
 
-	cstruct "github.com/fananchong/cstruct-go"
+	cstruct "github.com/daWxiaow/cstruct-go"
 	"github.com/gogo/protobuf/proto"
 )
 

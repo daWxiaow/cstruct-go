@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	cstruct "github.com/fananchong/cstruct-go"
+	cstruct "github.com/daWxiaow/cstruct-go"
 )
 
 type mystruct111 struct {

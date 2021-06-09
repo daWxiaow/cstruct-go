@@ -1,4 +1,4 @@
-module github.com/fananchong/cstruct-go
+module github.com/daWxiaow/cstruct-go
 
 require (
 	github.com/gogo/protobuf v1.2.0

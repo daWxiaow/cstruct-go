@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/fananchong/cstruct-go"
+	"github.com/daWxiaow/cstruct-go"
 )
 
 type StructA struct {
